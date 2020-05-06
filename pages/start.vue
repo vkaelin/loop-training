@@ -176,15 +176,15 @@ export default {
       this.interval = 1
     },
     nextInterval () {
+      this.elapsedIntervalTime = 0
+      this.interval++
+      this.startTimeInterval = Date.now()
+
       if (this.interval % 2 === 0) {
         this.audioStop.play()
       } else {
         this.audioStart.play()
       }
-
-      this.elapsedIntervalTime = 0
-      this.interval++
-      this.startTimeInterval = Date.now()
 
       if (this.interval > this.totalIntervals) {
         this.stopTimer()
