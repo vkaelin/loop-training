@@ -1,37 +1,37 @@
 <template>
-  <div class="container pt-8 mx-auto text-sm">
+  <div class="container pt-10 mx-auto text-base">
     <div class="relative text-center">
-      <span class="relative z-10 px-3 text-base font-semibold uppercase bg-gray-900">Nombres</span>
+      <span class="relative z-10 px-3 text-lg font-semibold uppercase bg-gray-900">Nombres</span>
       <div class="absolute w-5/6 bg-indigo-500 bg-opacity-25 divider-line" />
     </div>
-    <div class="mt-4 space-y-6">
+    <div class="mt-5 space-y-6">
       <ConfigLine v-model="number.loops" :index="1">
-        Nombre de boucles d'exercices
+        Boucles d'exercices
       </ConfigLine>
       <ConfigLine v-model="number.exercices" :index="2">
-        Nombre d'exercices par boucle
+        Exercices par boucle
       </ConfigLine>
       <ConfigLine v-model="number.repetitions" :index="3">
-        Nombre de répétitions des boucles
+        Répétitions des boucles
       </ConfigLine>
     </div>
-    <div class="relative mt-8 text-center">
-      <span class="relative z-10 px-3 text-base font-semibold uppercase bg-gray-900">Durées (sec.)</span>
+    <div class="relative mt-10 text-center">
+      <span class="relative z-10 px-3 text-lg font-semibold uppercase bg-gray-900">Durées (sec.)</span>
       <div class="absolute w-5/6 bg-indigo-500 bg-opacity-25 divider-line" />
     </div>
-    <div class="mt-4 space-y-6">
+    <div class="mt-5 space-y-6">
       <ConfigLine v-model="time.exercices" :index="4">
-        Durée des exercices
+        Exercices
       </ConfigLine>
       <ConfigLine v-model="time.exercicesBreaks" :index="5">
-        Durée des pauses
+        Pauses
       </ConfigLine>
       <ConfigLine v-model="time.loopsBreaks" :index="6">
-        Durée des pauses entre boucles
+        Pauses entre boucles
       </ConfigLine>
     </div>
     <button
-      class="block px-4 py-2 mx-auto mt-12 text-base bg-indigo-500 rounded-md focus:shadow-md focus:outline-none focus:bg-indigo-400"
+      class="block px-4 py-2 mx-auto mt-12 text-lg bg-indigo-500 rounded-md focus:shadow-md focus:outline-none focus:bg-indigo-400"
       type="button"
       @click="startTraining"
     >
