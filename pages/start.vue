@@ -1,8 +1,14 @@
 <template>
   <div class="px-2">
-    <div
-      class="text-center text-7xl"
-    >{{ currentInterval.time - (elapsedIntervalTime/1000)|secToTime }}</div>
+    <div class="flex items-center justify-center text-7xl">
+      <div
+        v-for="(number, index) in remainingIntervalTime"
+        :key="index"
+        :style="{'width': number === ':' ? '30px' : '50px'}"
+        :class="{'-mt-3': number === ':'}"
+        class="text-center"
+      >{{ number }}</div>
+    </div>
     <div class="flex items-center justify-between">
       <div class="w-1/3 text-left">
         <div class="text-sm">Ecoulé</div>
@@ -90,6 +96,9 @@ export default {
         interval.time = this.time.exercices
       }
       return interval
+    },
+    remainingIntervalTime () {
+      return this.$options.filters.secToTime(this.currentInterval.time - (this.elapsedIntervalTime / 1000))
     },
     remainingTotalTime () {
       return this.totalTime - (this.elapsedTotalTime / 1000)
