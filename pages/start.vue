@@ -59,6 +59,8 @@ import { mapState } from 'vuex'
 export default {
   data () {
     return {
+      audioStart: null,
+      audioStop: null,
       elapsedIntervalTime: 0,
       elapsedTotalTime: 0,
       interval: 1,
@@ -84,7 +86,7 @@ export default {
           interval.time = this.time.exercicesBreaks
         }
       } else { // Exercice
-        interval.type = 'Exercie'
+        interval.type = 'Exercice'
         interval.time = this.time.exercices
       }
       return interval
@@ -102,6 +104,11 @@ export default {
         this.number.repetitions - this.time.loopsBreaks
     },
     ...mapState(['number', 'time'])
+  },
+
+  beforeMount () {
+    this.audioStart = new Audio('audio/start.mp3')
+    this.audioStop = new Audio('audio/stop.mp3')
   },
 
   beforeDestroy () {
@@ -158,6 +165,7 @@ export default {
       }
       this.ticker = new this.AdjustingInterval(doWork, 25, fixTimerDrift, 10)
       this.ticker.start()
+      this.audioStart.play()
     },
     stopTimer () {
       this.ticker.stop()
@@ -168,6 +176,12 @@ export default {
       this.interval = 1
     },
     nextInterval () {
+      if (this.interval % 2 === 0) {
+        this.audioStop.play()
+      } else {
+        this.audioStart.play()
+      }
+
       this.elapsedIntervalTime = 0
       this.interval++
       this.startTimeInterval = Date.now()
