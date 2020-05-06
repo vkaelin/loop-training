@@ -31,9 +31,9 @@
       </ConfigLine>
     </div>
     <button
+      @click="startTraining"
       class="block px-4 py-2 mx-auto mt-12 text-lg bg-indigo-500 rounded-md focus:shadow-md focus:outline-none focus:bg-indigo-400"
       type="button"
-      @click="startTraining"
     >
       Commencer
     </button>

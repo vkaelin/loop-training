@@ -12,6 +12,9 @@ module.exports = {
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
         title: ['Gochi Hand', ...defaultTheme.fontFamily.sans]
+      },
+      fontSize: {
+        '7xl': '5rem'
       }
     }
   },

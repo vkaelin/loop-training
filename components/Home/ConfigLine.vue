@@ -11,10 +11,10 @@
       </div>
     </div>
     <input
+      @input="$emit('input', Number($event.target.value))"
       :value="value"
       class="w-16 py-1 ml-6 leading-3 text-center bg-gray-700 border border-indigo-500 rounded-md focus:outline-none focus:bg-gray-800"
       type="number"
-      @input="$emit('input', Number($event.target.value))"
     >
   </div>
 </template>
