@@ -159,8 +159,8 @@ export default {
   },
 
   beforeMount () {
-    this.audioStart = new Audio('audio/start.mp3')
-    this.audioStop = new Audio('audio/stop.mp3')
+    this.audioStart = new Audio(require('@/assets/audio/start.mp3'))
+    this.audioStop = new Audio(require('@/assets/audio/stop.mp3'))
   },
 
   beforeDestroy () {
