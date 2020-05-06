@@ -1,5 +1,5 @@
 <template>
-  <div class="px-2">
+  <div class="relative px-2" style="height: calc(100vh - 55px);">
     <div class="flex items-center justify-center text-7xl">
       <div
         v-for="(number, index) in remainingIntervalTime"
@@ -32,17 +32,28 @@
     <div class="text-indigo-400">
       <button
         @click="btnClick"
+        type="button"
         class="flex items-center justify-center w-full py-16 mt-16 bg-gray-700 border border-indigo-400 rounded-md"
       >
-        <template v-if="startTime">
+        <template v-if="status === 'started'">
           <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
             <path
-              d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z"
               clip-rule="evenodd"
               fill-rule="evenodd"
             />
           </svg>
-          <span class="ml-2 text-xl font-semibold">Recommencer le training</span>
+          <span class="ml-2 text-xl font-semibold">Mettre en pause</span>
+        </template>
+        <template v-else-if="status === 'paused'">
+          <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
+            <path
+              d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
+              clip-rule="evenodd"
+              fill-rule="evenodd"
+            />
+          </svg>
+          <span class="ml-2 text-xl font-semibold">Reprendre</span>
         </template>
         <template v-else>
           <svg class="w-12 h-12" fill="currentColor" viewBox="0 0 20 20">
@@ -55,6 +66,36 @@
           <span class="ml-2 text-xl font-semibold">Démarrer</span>
         </template>
       </button>
+    </div>
+    <div class="absolute bottom-0 left-0 right-0 flex justify-between mx-2 mb-2">
+      <button @click="stopTimer" class="focus:outline-none focus:text-indigo-400" type="button">
+        <svg
+          class="w-8 h-8"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+          />
+        </svg>
+      </button>
+      <nuxt-link to="/" class="focus:outline-none focus:text-indigo-400">
+        <svg
+          class="w-8 h-8"
+          fill="none"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </nuxt-link>
     </div>
   </div>
 </template>
@@ -70,6 +111,8 @@ export default {
       elapsedIntervalTime: 0,
       elapsedTotalTime: 0,
       interval: 1,
+      status: 'waiting',
+      startPause: null,
       startTime: null,
       startTimeInterval: null,
       ticker: null
@@ -149,10 +192,21 @@ export default {
       }
     },
     btnClick () {
-      if (this.startTime) {
-        this.stopTimer()
-      } else {
-        this.startTimer()
+      switch (this.status) {
+        case 'waiting':
+          this.status = 'started'
+          this.startTimer()
+          break
+        case 'started':
+          this.status = 'paused'
+          this.startPause = Date.now()
+          break
+        case 'paused':
+          this.status = 'started'
+          this.startTime += (Date.now() - this.startPause)
+          this.startTimeInterval += (Date.now() - this.startPause)
+          this.startPause = null
+          break
       }
     },
     startTimer () {
@@ -160,6 +214,7 @@ export default {
       this.startTimeInterval = Date.now()
       const doWork = () => {
         if (!this.startTime) { return }
+        if (this.status === 'paused') { return }
 
         this.elapsedTotalTime += 25
         this.elapsedIntervalTime += 25
@@ -169,6 +224,8 @@ export default {
         }
       }
       const fixTimerDrift = () => {
+        if (this.status === 'paused') { return }
+
         this.elapsedTotalTime = Date.now() - this.startTime
         this.elapsedIntervalTime = Date.now() - this.startTimeInterval
       }
@@ -177,7 +234,8 @@ export default {
       this.audioStart.play()
     },
     stopTimer () {
-      this.ticker.stop()
+      this.status = 'waiting'
+      this.ticker && this.ticker.stop()
       this.startTime = null
       this.startTimeInterval = null
       this.elapsedIntervalTime = 0
