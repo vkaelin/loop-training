@@ -194,6 +194,17 @@ export default {
     btnClick () {
       switch (this.status) {
         case 'waiting':
+          this.audioStart.volume = 0
+          this.audioStop.volume = 0
+
+          this.audioStart.play()
+          this.audioStart.pause()
+          this.audioStop.play()
+          this.audioStop.pause()
+
+          this.audioStart.volume = 1
+          this.audioStop.volume = 1
+
           this.status = 'started'
           this.startTimer()
           break
