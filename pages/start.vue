@@ -1,5 +1,5 @@
 <template>
-  <div class="relative px-2" style="height: calc(100vh - 55px);">
+  <div class="container relative px-2 mx-auto" style="height: calc(100vh - 55px);">
     <div class="flex items-center justify-center text-7xl">
       <div
         v-for="(number, index) in remainingIntervalTime"
@@ -83,6 +83,22 @@
           />
         </svg>
       </button>
+      <button @click="switchSound" class="focus:outline-none focus:text-indigo-400" type="button">
+        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            v-if="settings.sound"
+            d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM14.657 2.929a1 1 0 011.414 0A9.972 9.972 0 0119 10a9.972 9.972 0 01-2.929 7.071 1 1 0 01-1.414-1.414A7.971 7.971 0 0017 10c0-2.21-.894-4.208-2.343-5.657a1 1 0 010-1.414zm-2.829 2.828a1 1 0 011.415 0A5.983 5.983 0 0115 10a5.984 5.984 0 01-1.757 4.243 1 1 0 01-1.415-1.415A3.984 3.984 0 0013 10a3.983 3.983 0 00-1.172-2.828 1 1 0 010-1.415z"
+            clip-rule="evenodd"
+            fill-rule="evenodd"
+          />
+          <path
+            v-else
+            d="M9.383 3.076A1 1 0 0110 4v12a1 1 0 01-1.707.707L4.586 13H2a1 1 0 01-1-1V8a1 1 0 011-1h2.586l3.707-3.707a1 1 0 011.09-.217zM12.293 7.293a1 1 0 011.414 0L15 8.586l1.293-1.293a1 1 0 111.414 1.414L16.414 10l1.293 1.293a1 1 0 01-1.414 1.414L15 11.414l-1.293 1.293a1 1 0 01-1.414-1.414L13.586 10l-1.293-1.293a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+            fill-rule="evenodd"
+          />
+        </svg>
+      </button>
       <nuxt-link to="/" class="focus:outline-none focus:text-indigo-400">
         <svg
           class="w-8 h-8"
@@ -155,7 +171,7 @@ export default {
         this.time.loopsBreaks) * this.number.loops) *
         this.number.repetitions - this.time.loopsBreaks
     },
-    ...mapState(['number', 'time'])
+    ...mapState(['number', 'settings', 'time'])
   },
 
   beforeMount () {
@@ -242,7 +258,9 @@ export default {
       }
       this.ticker = new this.AdjustingInterval(doWork, 25, fixTimerDrift, 10)
       this.ticker.start()
-      this.audioStart.play()
+      if (this.settings.sound) {
+        this.audioStart.play()
+      }
     },
     stopTimer () {
       this.status = 'waiting'
@@ -253,15 +271,20 @@ export default {
       this.elapsedTotalTime = 0
       this.interval = 1
     },
+    switchSound () {
+      this.$store.commit('UPDATE_SETTINGS', { key: 'sound', value: !this.settings.sound })
+    },
     nextInterval () {
       this.elapsedIntervalTime = 0
       this.interval++
       this.startTimeInterval = Date.now()
 
-      if (this.interval % 2 === 0) {
-        this.audioStop.play()
-      } else {
-        this.audioStart.play()
+      if (this.settings.sound) {
+        if (this.interval % 2 === 0) {
+          this.audioStop.play()
+        } else {
+          this.audioStart.play()
+        }
       }
 
       if (this.interval > this.totalIntervals) {
