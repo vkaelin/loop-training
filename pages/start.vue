@@ -157,7 +157,7 @@ export default {
       return interval
     },
     remainingIntervalTime () {
-      return this.$options.filters.secToTime(this.currentInterval.time - (this.elapsedIntervalTime / 1000))
+      return this.$options.filters.secToTime(this.currentInterval.time - (this.elapsedIntervalTime / 1000), true)
     },
     remainingTotalTime () {
       return this.totalTime - (this.elapsedTotalTime / 1000)
@@ -236,6 +236,24 @@ export default {
           break
       }
     },
+    nextInterval () {
+      this.elapsedIntervalTime = 0
+      this.interval++
+      this.startTimeInterval = Date.now()
+
+      if (this.settings.sound) {
+        if (this.interval % 2 === 0) {
+          this.audioStop.play()
+        } else {
+          this.audioStart.play()
+        }
+      }
+
+      if (this.interval > this.totalIntervals) {
+        this.stopTimer()
+        this.$router.push('/finish')
+      }
+    },
     startTimer () {
       this.startTime = Date.now()
       this.startTimeInterval = Date.now()
@@ -273,24 +291,6 @@ export default {
     },
     switchSound () {
       this.$store.commit('UPDATE_SETTINGS', { key: 'sound', value: !this.settings.sound })
-    },
-    nextInterval () {
-      this.elapsedIntervalTime = 0
-      this.interval++
-      this.startTimeInterval = Date.now()
-
-      if (this.settings.sound) {
-        if (this.interval % 2 === 0) {
-          this.audioStop.play()
-        } else {
-          this.audioStart.play()
-        }
-      }
-
-      if (this.interval > this.totalIntervals) {
-        this.stopTimer()
-        this.$router.push('/finish')
-      }
     }
   }
 }

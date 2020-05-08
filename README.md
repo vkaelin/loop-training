@@ -2,6 +2,8 @@
 
 > Application faciliant l'entraînement fractionné
 
+Sons non fonctionnels avec Safari sur IOS. Privilégier Chrome.
+
 ## Build Setup
 
 ```bash
